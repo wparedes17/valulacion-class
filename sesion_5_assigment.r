@@ -12,7 +12,7 @@ sample_a <- boston_housing %>% filter(chas == 0) %>% pull(crim)
 
 # Assign sample B 
 sample_b <- boston_housing %>% filter(chas == 1) %>% pull(crim)
-
+z
 # t.test
 print(t.test(sample_a, sample_b, var.equal = FALSE))
 
