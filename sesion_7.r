@@ -56,7 +56,10 @@ ggsave("plots/non_relationship_plot.png", non_relationship_plot, width = 10, hei
 non_relationship_plot
 
 # Measuring the relationship using correlation
-# Correlantion varies between -1 and 1
+# Correlation varies between -1 and 1
+# 0 implies null correlation
+# 1 implies perfect positive correlation
+# -1 implies perfect negative correlation
 correlations_pearson <- df %>% summarise(
         cor_line = cor(predictor, line_pattern, method="pearson"),
         cor_non_linear = cor(predictor, non_linear, method="pearson"),
