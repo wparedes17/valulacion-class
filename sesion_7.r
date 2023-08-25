@@ -55,6 +55,8 @@ non_relationship_plot <- df %>%
 ggsave("plots/non_relationship_plot.png", non_relationship_plot, width = 10, height = 10)
 non_relationship_plot
 
+df
+
 # Measuring the relationship using correlation
 # Correlation varies between -1 and 1
 # 0 implies null correlation
@@ -69,6 +71,9 @@ correlations_pearson <- df %>% summarise(
 
 names(correlations_pearson) <- c("Line", "Non linear", "Non linear 2", "Non relationship")
 correlations_pearson
+
+cor(df$predictor, df$line_pattern, method="pearson")
+
 
 # Correlation using Spearman
 correlations_spearman <- df %>% 
