@@ -58,7 +58,7 @@ prop.test(as.matrix(contingent_table %>% select(Married, Single)))
 # mosaic() requires the column names without spaces
 bike_buyers <- bike_buyers %>% 
     rename(
-        `Marital_Status` = `Marital Status`
+        Marital_Status = `Marital Status`
     )
 
 # Mosaic plot
