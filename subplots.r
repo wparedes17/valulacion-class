@@ -2,7 +2,7 @@
 library(tidyverse)
 library(cowplot)
 
-
+#
 # Some analysis procedure
 diamonds <- read.csv("datasets/diamonds - diamonds.csv")
 head(diamonds)
