@@ -11,6 +11,8 @@ diamonds$cut <- factor(diamonds$cut,
 barplot_cut <- ggplot(diamonds, aes(x = cut)) +
     geom_bar()
 
+barplot_cut
+
 # Save plot
 ggsave("plots/barplot_cut.png", barplot_cut, width = 10, height = 10, dpi = 300)
 

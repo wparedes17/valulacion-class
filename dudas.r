@@ -1,63 +1,46 @@
 library(tidyverse)
 
-df <- read_csv("datasets/diamonds - diamonds.csv")
+AmesHousing <- read_csv("datasets/AmesHousing.csv")
+glimpse(AmesHousing)
 
-# windows es window()
-x11()
-g <- df %>% ggplot(aes(x = price, y = carat)) +
-  geom_point()
+AmesHousing %>% group_by(`Kitchen Qual`) %>% summarise(count = n())
+AmesHousing %>% group_by(`Pool QC`) %>% summarise(count = n())
+
+# Como solo hay prueba para dos niveles
+# Una opcion es dicotomizar los valores de `Kitchen Qual`
+AmesHousing <- AmesHousing %>% 
+  mutate(Kitchen_Qual_Bin = ifelse(`Kitchen Qual` %in% c("Ex", "Gd"), "Good", "Bad"))
+
+AmesHousing %>% group_by(Kitchen_Qual_Bin) %>% summarise(count = n())
+
+t.test(SalePrice ~ Kitchen_Qual_Bin, data = AmesHousing, conf.level = 0.30,
+       var.equal = FALSE)
 
 
-# This line is to save the plot
-# ggsave(filename = "plots/overplotting.png", plot = g, width = 10, height = 10)
-ggsave("plots/overplotting.png", g, width = 10, height = 10)
-
-h <- g + geom_smooth(formula = y ~ x, method = "lm", se = FALSE)
-h
-
-cereal <- read_csv("datasets/cereal.csv")
-
-
-# Categorica 2 niveles vs numerica
-cereal %>% group_by(mfr) %>% summarise(
-  n = n(),
-)
-
-cereal <- cereal %>% mutate(
-    BigMFR = if_else(mfr == "K" | mfr == "G", "Big", "Small"))
-
-cereal %>% group_by(BigMFR) %>% summarise(
-  n = n(),
-)
-
-cereal %>% ggplot(aes(x = BigMFR, y = calories)) +
+# Boxplot 
+# Esto sirve para variables categoricas con mas de 2 niveles
+AmesHousing %>% ggplot(aes(x = `Kitchen Qual`, y = SalePrice)) +
   geom_boxplot()
 
-cereal %>% ggplot(aes(x = calories, fill = BigMFR)) +
-  geom_histogram()
+# Para el caso de Pool QC debo primero aplicar un filtro
+Ames2 <- AmesHousing %>% filter(!is.na(`Pool QC`))
+glimpse(Ames2)
 
-# Alter form
-t.test(sugars ~ BigMFR, data = cereal)
+Ames2 <- Ames2 %>% 
+  mutate(Pool_Qual_Bin = ifelse(`Pool QC` %in% c("Ex", "Gd"), "Good", "Bad"))
 
-sample_a <- cereal %>% filter(BigMFR == "Big") %>% pull(sugars)
-sample_b <- cereal %>% filter(BigMFR == "Small") %>% pull(sugars)
+Ames2 %>% group_by(Pool_Qual_Bin) %>% summarise(count = n())
 
-t.test(sample_a, sample_b, var.equal = FALSE)
+t.test(SalePrice ~ Pool_Qual_Bin, data = Ames2, conf.level = 0.30,
+       var.equal = FALSE)
 
-# Numerica vs numerica
-cereal %>% ggplot(aes(x = carbo, y = calories)) +
-  geom_point()
 
-cor(cereal$carbo, cereal$calories)
-cor.test(cereal$carbo, cereal$calories)
-# Categorica vs categorica
+# Algo que se puede hacer con la dicotomizacion es crear nuevas variables
+AmesHousing <- AmesHousing %>% 
+   mutate(is_there_pool = ifelse(is.na(`Pool QC`), "No", "Yes"))
+glimpse(AmesHousing)
 
-tabla_contingencia <- cereal %>% group_by(mfr, type) %>% summarise(
-  n = n(),
-) %>% spread(type, n) %>% ungroup() %>% select(H,C)
+AmesHousing %>% group_by(is_there_pool) %>% summarise(count = n())
 
-tabla_contingencia
-
-prop.test(as.matrix(tabla_contingencia))
-
-as.matrix(tabla_contingencia)
+t.test(SalePrice ~ is_there_pool, data = AmesHousing, conf.level = 0.30,
+       var.equal = FALSE)
