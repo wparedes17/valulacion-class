@@ -54,6 +54,7 @@ carat_price <- diamonds_sample %>% ggplot(aes(x = carat, y = price)) +
   geom_point(aes(color = color, size = depth, alpha = 0.6))
 carat_price
 
+
 # Here a successful employment of grouping
 iris <- read_csv("datasets/iris.csv")
 head(iris)
