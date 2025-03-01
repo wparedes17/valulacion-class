@@ -142,3 +142,63 @@ t.test(wine$threshold, mu = 25, alternative = "less")
 2*pnorm(statistic, lower.tail = TRUE)
 2*pt(statistic, df = 9, lower.tail = FALSE)
 t.test(wine$threshold, mu = 25, alternative = "two.sided")
+
+## Iphone example:
+iphone_sample <- tibble(
+    iphone_no = 1:60,
+    price = c(
+      6727, 6625, 5178, 6910, 9581,
+      5300, 2599, 4484, 5300, 5096,
+      6931, 2966, 8358, 4056, 6971,
+      6727, 6625, 5178, 6910, 9581,
+      5300, 2599, 4484, 5300, 5096,
+      6931, 2966, 8358, 4056, 6971,
+      6727, 6625, 5178, 6910, 9581,
+      5300, 2599, 4484, 5300, 5096,
+      6931, 2966, 8358, 4056, 6971,
+      6727, 6625, 5178, 6910, 9581,
+      5300, 2599, 4484, 5300, 5096,
+      6931, 2966, 8358, 4056, 6971)
+)
+n <- nrow(iphone_sample)
+mu_0 <- 5500
+mu_sample <- mean(iphone_sample$price)
+
+statistic <- (mu_sample - mu_0)/(sd(iphone_sample$price)/sqrt(n))
+
+# Less hypothesis
+pnorm(statistic, lower.tail = TRUE) # when i know sigma or n is large
+pt(statistic, df = n-1, lower.tail = TRUE) # when i don't know sigma or n is small
+t.test(iphone_sample$price, mu = 5500, alternative = "less")
+
+# Greater hypothesis
+pnorm(statistic, lower.tail = FALSE) # when i know sigma or n is large
+pt(statistic, df = n-1, lower.tail = FALSE) # when i don't know sigma or n is small
+t.test(iphone_sample$price, mu = 5500, alternative = "greater")
+
+
+
+# IQ example
+iq_sample <- tibble(
+    iq = c(
+      114, 100, 104, 89, 102, 91, 114, 114, 103, 105,
+      108, 130, 120, 132, 111, 128, 118, 119, 86, 72,
+      111, 103, 74, 112, 107, 103, 98, 96, 112, 112, 93)
+    )
+n <- nrow(iq_sample)
+mu_0 <- 100
+mu_sample <- mean(iq_sample$iq)
+
+statistic <- (mu_sample - mu_0)/(sd(iq_sample$iq)/sqrt(n))
+
+# Different or two.sided hypothesis
+pnorm(statistic, lower.tail = FALSE)*2
+pt(statistic, df = n-1, lower.tail = FALSE)*2
+t.test(iq_sample$iq, mu = mu_0, alternative = "two.sided")
+
+# p-value = 0.03003, this means data doesnt support the null hypothesis.
+# Thus, we can claim we have enough evidence to reject the null hypothesis and support the alternative hypothesis.
+# In this, case data supports the alternative hypothesis that the average IQ is different from 100
+
+# When we use significance levels, i.e, alpha = 0.05, we can reject the null hypothesis.
+# However, considering alpha = 0.01 we can not reject the null hypothesis.
